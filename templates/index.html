@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realtime User Count</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #85c1e9, #dae0eb);
+        }
+
+        h1, h2 {
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            background: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-size: 2em;
+            color: #333;
+        }
+
+        #user-count {
+            color: #007bff;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Realtime User Count</h1>
+    <h2>Connected Users: <span id="user-count">0</span></h2>
+    
+    <script>
+        var socket = io.connect(window.location.origin);
+        socket.on('update_count', function(data) {
+            var userCountElement = document.getElementById('user-count');
+            userCountElement.innerText = data.count;
+            userCountElement.classList.remove('pulse');
+            void userCountElement.offsetWidth; // Trigger reflow to restart animation
+            userCountElement.classList.add('pulse');
+        });
+    </script>
+</body>
+</html>
